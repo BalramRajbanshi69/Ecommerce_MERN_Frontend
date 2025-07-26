@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProducts } from "@/store/productSlice";
 
 const Product = () => {
-    const apiUrl = import.meta.env.VITE_REACT_API_URL;
+    const apiUrl = import.meta.env.VITE_APP_API_URL;
     const dispatch = useDispatch();
     const { userProducts,searchTerm,userProductsStatus } = useSelector((state) => state.product);
+    console.log(userProducts);
+    
     
 
     const filteredSearchTerm = userProducts.filter((product)=>
@@ -41,9 +43,9 @@ const Product = () => {
                                             className="object-cover w-full h-full"
                                             src={
                                                
-                                                     product.productImage
-                                                        ? product.productImage
-                                                    : s1
+                                                    product.productImage
+                                                        ? `${apiUrl}${product.productImage}` 
+                                                        : s1
                                             }
                                             alt={product.name || "Product Image"}
                                         />
