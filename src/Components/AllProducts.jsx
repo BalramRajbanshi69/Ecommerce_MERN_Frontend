@@ -5,7 +5,7 @@ import { fetchAllProducts } from "@/store/productSlice";
 import { useNavigate } from "react-router-dom";
 
 const AllProducts = () => {
-  const apiUrl = import.meta.env.VITE_REACT_API_URL;
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const { data: products, searchTerm } = useSelector((state) => state.product);
@@ -39,8 +39,8 @@ const AllProducts = () => {
                         className="object-cover w-full h-full"
                         src={
                           product.productImage
-      ? product.productImage 
-      : s1
+                      ? `${apiUrl}${product.productImage}` 
+                      : s1
                         }
                         alt={product.name || "Product Image"}
                       />
