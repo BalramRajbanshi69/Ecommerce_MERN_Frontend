@@ -44,7 +44,7 @@ const Product = () => {
                                             src={
                                                
                                                     product.productImage
-                                                        ? `${apiUrl}${product.productImage}` 
+                                                        ? product.productImage 
                                                         : s1
                                             }
                                             alt={product.name || "Product Image"}

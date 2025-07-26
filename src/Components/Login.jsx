@@ -7,7 +7,7 @@ import { loginUser } from "@/store/authSlice"; // Keep this
 import toast from "react-hot-toast";
 
 const Login = () => {
-  const apiUrl = import.meta.env.VITE_REACT_API_URL;
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
   const dispatch = useDispatch(); 
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({

@@ -8,7 +8,7 @@ import { registerUser } from "@/store/authSlice"; // Keep this
 import { STATUSES } from "@/globals/misc/statuses"; // Keep this
 
 const SignUp = () => {
-  const apiUrl = import.meta.env.VITE_REACT_API_URL;
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
   const { status } = useSelector((state) => state.auth); 
   const dispatch = useDispatch(); // Keep this
   const navigate = useNavigate();
@@ -100,16 +100,11 @@ const SignUp = () => {
           email: credentials.email,
           password: credentials.password,
         };
-        // Dispatch Redux action for registration
-        const resultAction = await dispatch(registerUser(userData)).unwrap(); // Use .unwrap() to catch rejected promises
-        
-        // Handle success/error based on the thunk's outcome
-        if (resultAction) { // If registerUser resolves with data
+        await dispatch(registerUser(userData)); 
+
           toast.success("User registered successfully");
           navigate("/login");
-        } else { // This else might be redundant if unwrap() always throws on failure
-          toast.error("Registration failed. Please try later!");
-        }
+        
       } catch (error) {
         console.error("Registration Error:", error);
         toast.error(error.message || "An unexpected error occurred during registration");

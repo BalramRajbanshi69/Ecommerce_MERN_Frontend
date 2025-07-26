@@ -39,8 +39,8 @@ const AllProducts = () => {
                         className="object-cover w-full h-full"
                         src={
                           product.productImage
-                      ? `${apiUrl}${product.productImage}` 
-                      : s1
+      ? product.productImage 
+      : s1
                         }
                         alt={product.name || "Product Image"}
                       />
