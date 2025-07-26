@@ -6,7 +6,7 @@ const API_BASE_URL = import.meta.env.VITE_APP_API_URL || "http://localhost:5000"
 const API = axios.create({
     baseURL : API_BASE_URL + "/api",
     headers:{
-        "Content-Type":"application/json",            // if form,image use multipart/formData
+        "Content-Type":"application/json",            
         "Accept":"application/json"
     }
 })
@@ -15,7 +15,7 @@ const API = axios.create({
 const APIAuthenticated = axios.create({
     baseURL : API_BASE_URL + "/api",
     headers:{
-        "Content-Type":"application/json",            // if form,image use multipart/formData
+        "Content-Type":"application/json",            
         "Accept":"application/json",
         "token":`${localStorage.getItem("token")}`
 
