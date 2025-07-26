@@ -49,5 +49,8 @@
     "postcss": "^8.5.3",
     "typescript": "^5.8.2",
     "vite": "^6.3.5"
-  }
+  },
+  "overrides": {
+  "@rollup/rollup-linux-x64-gnu": "4.4.1"
+}
 }
