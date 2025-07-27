@@ -26,8 +26,8 @@ const SingleProduct = () => {
 
 
     const { data: user } = useSelector((state) => state.auth);
+    const {items} = useSelector((state) => state.cart);
   const handleAddToCart = () => {
-   
     try {
        if (
       user?.length == 0 &&
@@ -37,6 +37,15 @@ const SingleProduct = () => {
     ) {
       return navigate("/login");
     }
+    // Check if the product is already in the cart
+      const isItemInCart = items.some(item => item.productId === productId);
+
+      if (isItemInCart) {
+        toast.error("Item is already in cart");
+        return;
+      }
+
+
       dispatch(addToCart(productId));
     toast.success("Product added to cart successfully")
     } catch (error) {
