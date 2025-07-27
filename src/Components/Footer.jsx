@@ -65,7 +65,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/products"
+                    to="/userProduct"
                     className="text-white transition-colors text-md relative after:absolute after:bottom-0 after:left-0 after:h-0.5 
                   after:w-0 after:bg-white after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
                   >
