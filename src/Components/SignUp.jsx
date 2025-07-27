@@ -8,7 +8,7 @@ import { registerUser } from "@/store/authSlice";
 
 const SignUp = () => {
   const apiUrl = import.meta.env.VITE_APP_API_URL;
-  const dispatch = useDispatch(); // Keep this
+  const dispatch = useDispatch(); 
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     name: "",
