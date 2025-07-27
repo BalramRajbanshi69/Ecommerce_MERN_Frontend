@@ -39,8 +39,13 @@ const AllProducts = () => {
                     <div className="relative h-48">
                       <img
                         className="object-cover w-full h-full"
-                        src={product.productImage ? product.productImage : s1}
-                        // src={product.productImage ? `${apiUrl}${product.productImage}` : s1}
+                        // src={product.productImage ? product.productImage : s1} // Comment this out or delete it
+                        src={
+                          product.productImage &&
+                          product.productImage.length > 0
+                            ? `${apiUrl}${product.productImage[0]}`
+                            : s1
+                        } // Use this one
                         alt={product.name || "Product Image"}
                       />
                     </div>
