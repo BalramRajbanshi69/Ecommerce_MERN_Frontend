@@ -14,7 +14,7 @@ import { clearCart, fetchCartItems } from "@/store/cartSlice"; // Keep this
 import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { data: user } = useSelector((state) => state.auth); // Redux user state
