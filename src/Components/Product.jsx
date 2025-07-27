@@ -3,10 +3,12 @@ import React, { useEffect } from "react";
 import s1 from "../assets/picTwo.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProducts } from "@/store/productSlice";
+import { useNavigate } from "react-router-dom";
 
 const Product = () => {
     const apiUrl = import.meta.env.VITE_APP_API_URL;
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { userProducts,searchTerm,userProductsStatus } = useSelector((state) => state.product);
     console.log(userProducts);
     
@@ -25,11 +27,15 @@ const Product = () => {
 
     return (
         <>
-            <div className=" bg-[#00171f] h-screen">
+            <div className=" bg-[#00171f] min-h-screen">
                 <div className="container mx-auto max-w-7xl ">
                     <div className="flex flex-col py-8">
-                      
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                      <div className="flex items-center justify-between mb-4 ">
+                        <h1 className="text-3xl font-bold text-white">My Products</h1>
+                        <button onClick={()=>navigate("/addproduct")} className="bg-[white] text-black px-4 py-2 font-bold cursor-pointer">Add Product</button>
+                      </div>
+                      <div className="w-full h-[1px]  bg-white"></div>
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
                             {/* Ensure userProducts is an array before mapping */}
                             {filteredSearchTerm && filteredSearchTerm.length > 0 && filteredSearchTerm?.map((product) => (
                                 <div

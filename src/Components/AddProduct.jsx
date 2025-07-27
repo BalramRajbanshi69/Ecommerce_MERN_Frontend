@@ -1,22 +1,30 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import { addProduct, fetchUserProducts } from "@/store/productSlice";
+import { useDispatch } from "react-redux";
 
 const AddProduct = () => {
   const apiUrl = import.meta.env.VITE_REACT_API_URL;
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [product, setProduct] = useState({
     name: "",
     description: "",
     price: "",
     inStock: "",
-    productImage: "", 
+    productImage: "",
   });
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+
+
+    useEffect(() => {
+    dispatch(fetchUserProducts());
+  }, [dispatch]);
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -65,7 +73,7 @@ const AddProduct = () => {
     }
 
     const touchAll = {};
-    Object.keys(product).forEach(key => {
+    Object.keys(product).forEach((key) => {
       touchAll[key] = true;
     });
     setTouched(touchAll);
@@ -81,21 +89,11 @@ const AddProduct = () => {
     formData.append("price", product.price);
     formData.append("inStock", product.inStock);
     if (product.productImage) {
-      formData.append("productImage", product.productImage); // Ensure this matches backend field name
+      formData.append("productImage", product.productImage);
     }
 
     try {
-      const response = await axios.post(
-        `${apiUrl}/api/product/`, // Make sure this is your correct API endpoint
-        formData,
-        {
-          headers: {
-            "token": localStorage.getItem("token"), 
-            
-          },
-        }
-      );
-      console.log(response.data);
+       dispatch(addProduct(formData)); 
       toast.success("Product added successfully!");
 
       setProduct({
@@ -105,12 +103,13 @@ const AddProduct = () => {
         inStock: "",
         productImage: "",
       });
-      setErrors({}); // Clear errors on successful submission
-      setTouched({}); // Clear touched state on successful submission
+      setErrors({});
+      setTouched({});
 
       setTimeout(() => {
-        navigate("/products");
-      }, 1000);
+        navigate("/userProduct");
+      }, 1000);  
+          
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to add product");
       console.error(error);
@@ -119,8 +118,6 @@ const AddProduct = () => {
 
   const handleBlur = (e) => {
     setTouched({ ...touched, [e.target.name]: true });
-    // Optional: Re-validate on blur for immediate feedback
-    // validateForm(); 
   };
 
   const handleChange = (e) => {
@@ -129,7 +126,7 @@ const AddProduct = () => {
     if (type === "file") {
       setProduct({
         ...product,
-        [name]: files[0], // Assuming single file upload
+        [name]: files[0],
       });
     } else {
       setProduct({
@@ -138,7 +135,6 @@ const AddProduct = () => {
       });
     }
 
-    // Clear error when user types
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -148,70 +144,37 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 bg-[#0a0908]">
-      <div className="max-w-3xl p-8 mx-auto rounded-4xl shadow-lg bg-[#132a13]">
-        <div className="mb-8 text-white">
-          <h2 className="text-3xl font-bold ">Add New Products</h2>
-          <div className="h-1 mt-2 bg-blue-600 w-65"></div>
+    <div className="min-h-screen p-4 bg-gradient-to-br from-gray-900 to-gray-800">
+      <div className="max-w-3xl p-8 mx-auto mt-12 bg-white rounded-2xl shadow-2xl">
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-800">Add New Product</h2>
+          <div className="h-1 mx-auto mt-2 bg-blue-600 w-28"></div>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 text-white"
-        >
-          {/* Title Input */}
-          <div>
-            <label className="block text-sm font-medium">Product Name</label>
-            <input
-              type="text"
-              name="name"
-              value={product.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`block w-full p-2 mt-1 text-white placeholder-gray-400 bg-transparent border rounded-md shadow-sm focus:ring-blue-500
-                               ${
-                                 errors.name && touched.name
-                                   ? "border-red-500"
-                                   : "border-white"
-                               }
-                               focus:border-blue-500`}
-              placeholder="Enter product title"
-            />
-            {errors.name && touched.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-            )}
-          </div>
-
-          {/* Description Input */}
-          <div>
-            <label className="block text-sm font-medium text-white">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={product.description}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              rows="4"
-              className={`block w-full p-2 mt-1 text-white placeholder-gray-400 bg-transparent border rounded-md shadow-sm focus:ring-blue-500
-                                     ${
-                                       errors.description &&
-                                       touched.description
-                                         ? "border-red-500"
-                                         : "border-white"
-                                     }
-                                     focus:border-blue-500`}
-              placeholder="Enter product description"
-            />
-            {errors.description && touched.description && (
-              <p className="mt-1 text-sm text-red-500">{errors.description}</p>
-            )}
-          </div>
-
-          {/* Price and Stock Row */}
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-white">
+              <label className="block text-sm font-medium text-gray-700">
+                Product Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={product.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`block w-full p-2 mt-1 text-gray-700 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.name && touched.name ? "border-red-500" : "border-gray-300"
+                }`}
+                placeholder="Enter product title"
+              />
+              {errors.name && touched.name && (
+                <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
                 Price ($)
               </label>
               <input
@@ -220,21 +183,42 @@ const AddProduct = () => {
                 value={product.price}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`block w-full p-2 mt-1 placeholder-gray-400 bg-transparent border rounded-md shadow-sm focus:ring-blue-500
-                                 ${
-                                   errors.price && touched.price
-                                     ? "border-red-500"
-                                     : "border-white"
-                                 }
-                                 focus:border-blue-500`}
+                className={`block w-full p-2 mt-1 text-gray-700 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.price && touched.price ? "border-red-500" : "border-gray-300"
+                }`}
                 placeholder="0.00"
               />
               {errors.price && touched.price && (
                 <p className="mt-1 text-sm text-red-500">{errors.price}</p>
               )}
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Description
+            </label>
+            <textarea
+              name="description"
+              value={product.description}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              rows="4"
+              className={`block w-full p-2 mt-1 text-gray-700 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ${
+                errors.description && touched.description
+                  ? "border-red-500"
+                  : "border-gray-300"
+              }`}
+              placeholder="Enter product description"
+            />
+            {errors.description && touched.description && (
+              <p className="mt-1 text-sm text-red-500">{errors.description}</p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-white">
+              <label className="block text-sm font-medium text-gray-700">
                 Stock Quantity
               </label>
               <input
@@ -243,70 +227,80 @@ const AddProduct = () => {
                 value={product.inStock}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`block w-full p-2 mt-1 placeholder-gray-400 bg-transparent border rounded-md shadow-sm focus:ring-blue-500
-                               ${
-                                 errors.inStock && touched.inStock
-                                   ? "border-red-500"
-                                   : "border-white"
-                               }
-                               focus:border-blue-500`}
+                className={`block w-full p-2 mt-1 text-gray-700 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.inStock && touched.inStock ? "border-red-500" : "border-gray-300"
+                }`}
                 placeholder="0"
               />
               {errors.inStock && touched.inStock && (
                 <p className="mt-1 text-sm text-red-500">{errors.inStock}</p>
               )}
             </div>
-          </div>
 
-          {/* Image Upload */}
-          <div>
-            <label className="block text-sm font-medium text-white">
-              Product Image
-            </label>
-            <div className={`flex justify-center px-6 pt-5 pb-6 mt-1 transition-colors border-2 border-dashed rounded-md
-              ${errors.productImage && touched.productImage ? 'border-red-500' : 'border-white'}
-              hover:border-blue-500`}>
-              <div className="space-y-1 text-center">
-                <FaCloudUploadAlt className={`w-12 h-12 mx-auto ${errors.productImage && touched.productImage ? 'text-red-400' : 'text-gray-400'}`} />
-                <div className="flex text-sm text-white">
-                  <label
-                    htmlFor="productImage"
-                    className={`relative font-medium ${errors.productImage && touched.productImage ? 'text-red-400' : 'text-blue-400'} bg-white rounded-md cursor-pointer hover:text-blue-500`}
-                  >
-                    <span>Upload a file</span>
-                    <input
-                      id="productImage"
-                      name="productImage" // This name needs to match the backend Multer field
-                      type="file"
-                      // Removed 'multiple' to allow only a single file
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className="sr-only"
-                    />
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Product Image
+              </label>
+              <div
+                className={`flex justify-center px-6 pt-5 pb-6 mt-1 border-2 border-dashed rounded-md ${
+                  errors.productImage && touched.productImage
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } hover:border-blue-500`}
+              >
+                <div className="space-y-1 text-center">
+                  <FaCloudUploadAlt
+                    className={`w-12 h-12 mx-auto ${
+                      errors.productImage && touched.productImage
+                        ? "text-red-400"
+                        : "text-gray-400"
+                    }`}
+                  />
+                  <div className="flex text-sm text-gray-600">
+                    <label
+                      htmlFor="productImage"
+                      className={`relative font-medium ${
+                        errors.productImage && touched.productImage
+                          ? "text-red-400"
+                          : "text-blue-400"
+                      } bg-white rounded-md cursor-pointer hover:text-blue-500`}
+                    >
+                      <span>Upload a file</span>
+                      <input
+                        id="productImage"
+                        name="productImage"
+                        type="file"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="sr-only"
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
+                  {product.productImage && (
+                    <p className="text-sm text-gray-500">
+                      {product.productImage.name}
+                    </p>
+                  )}
                 </div>
-                <p className="text-xs text-gray-300">
-                  PNG, JPG, GIF up to 10MB
-                </p>
-                {/* Display selected file name */}
-                {product.productImage && (
-                  <p className="text-sm text-gray-300">{product.productImage.name}</p>
-                )}
               </div>
+              {errors.productImage && touched.productImage && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.productImage}
+                </p>
+              )}
             </div>
-            {errors.productImage && touched.productImage && (
-              <p className="mt-1 text-sm text-red-500">{errors.productImage}</p>
-            )}
           </div>
 
-          {/* Submit Button */}
           <div className="pt-4">
             <button
               type="submit"
               className="flex justify-center w-full px-4 py-3 text-sm font-medium text-white transition-colors bg-blue-600 border border-transparent rounded-md shadow-sm cursor-pointer hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Add Products
+              Add Product
             </button>
           </div>
         </form>

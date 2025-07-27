@@ -15,7 +15,6 @@ const productSlice = createSlice({
         userProductsStatus: STATUSES.SUCCESS ,// for specific user status 
         selectedProductDetails:{},   // for single product details
         
-
     },
     reducers:{                      // reducers are pure and synchronous , so no api calls
         setProduct(state,action){                       // register first set user
@@ -35,13 +34,21 @@ const productSlice = createSlice({
         },
         setSelectedProductDetails(state, action) {
             state.selectedProductDetails = action.payload;
+        },
+         deleteProductById(state, action) {
+            const index = state.data.findIndex((product) =>product._id === action.payload.productId);
+            state.data.splice(index, 1);
+
+        },
+         addProducts(state,action){
+            state.data.push(action.payload)
         }
        
     }
 })
 
 
-export const {setProduct,setStatus,setUserProduct,setUserProductsStatus,setSearchTerm,setSelectedProductDetails} = productSlice.actions
+export const {setProduct,setStatus,setUserProduct,setUserProductsStatus,setSearchTerm,setSelectedProductDetails,deleteProductById,addProducts} = productSlice.actions
 export default productSlice.reducer
 
 
@@ -111,4 +118,50 @@ export function fetchSingleProduct(productId){
     }
 }
 
+// although to add product , its works of admin to add but for now we can make user to add 
 
+export function addProduct(data){
+    return async function addProductThunk(dispatch){
+        dispatch(setStatus(STATUSES.LOADING));
+        try {
+            const response = await APIAuthenticated.post("/product/",data,
+                {
+                    headers:{
+                        "Content-Type":"multipart/form-data"                  // handle for image important
+                    }
+                }
+            ) 
+            // console.log(response.data.data);
+           dispatch(addProducts(response.data.data))
+            dispatch(setStatus(STATUSES.SUCCESS));
+           
+        } catch (error) {
+            console.log(error);
+            dispatch(setStatus(STATUSES.ERROR));
+            throw error; 
+            
+        }
+
+    }
+}
+
+
+
+
+export function deleteProduct(productId){
+    return async function deleteProductThunk(dispatch){
+        dispatch(setStatus(STATUSES.LOADING));
+        try {
+            const response = await APIAuthenticated.delete(`/products/${productId}`) 
+            // console.log(response.data.data);
+           dispatch(deleteProductById({productId}))
+            dispatch(setStatus(STATUSES.SUCCESS));
+           
+        } catch (error) {
+            console.log(error);
+            dispatch(setStatus(STATUSES.ERROR));
+            
+        }
+
+    }
+}
