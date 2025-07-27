@@ -41,7 +41,7 @@ const SingleProduct = () => {
     }
 
       // Check if the product is already in the cart
-      const isItemInCart = items.some(item => item.product._id === productId);
+      const isItemInCart = items?.some(item => item.product?._id === productId);
 
       if (isItemInCart) {
         toast.error('Item is already in cart');
