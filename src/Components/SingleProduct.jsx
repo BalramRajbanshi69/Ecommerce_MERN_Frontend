@@ -8,6 +8,7 @@ import { addToCart } from '@/store/cartSlice';
 
 
 const SingleProduct = () => {
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
   const {id:productId} = useParams()
   const dispatch = useDispatch();
   const { selectedProductDetails } = useSelector((state) => state.product)  
@@ -51,7 +52,7 @@ const SingleProduct = () => {
             <img
               alt="ecommerce"
               className="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200"
-              src={product?.productImage}
+              src={product?.productImage && product.productImage.length > 0 ? `${apiUrl}${product.productImage[0]}` : s1}
             />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="title-font text-gray-500 tracking-widest text-gray-900 text-3xl title-font font-medium ">

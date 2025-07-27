@@ -42,10 +42,10 @@ const Product = () => {
                                         <img
                                             className="object-cover w-full h-full"
                                             src={
-                                               
-                                                    product.productImage
-                                                        ? product.productImage 
-                                                        : s1
+                                                product.productImage &&
+                                                product.productImage.length > 0
+                                                    ? `${apiUrl}${product.productImage[0]}`
+                                                    : s1
                                             }
                                             alt={product.name || "Product Image"}
                                         />
