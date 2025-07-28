@@ -35,13 +35,21 @@ const productSlice = createSlice({
         setSelectedProductDetails(state, action) {
             state.selectedProductDetails = action.payload;
         },
-         deleteProductById(state, action) {
-            const index = state.data.findIndex((product) =>product._id === action.payload.productId);
-            state.data.splice(index, 1);
+        //  deleteProductById(state, action) {
+        //     const index = state.data.findIndex((product) =>product._id === action.payload.productId);
+        //     state.data.splice(index, 1);
 
+        // },
+
+        // since we need to update the userProducts too so that after deletion , it will delete without refresh userProduct page
+         deleteProductById(state, action) {
+            state.data = state.data.filter((product) => product._id !== action.payload.productId);
+            state.userProducts = state.userProducts.filter((product) => product._id !== action.payload.productId);
         },
+        
          addProducts(state,action){
             state.data.push(action.payload)
+            state.userProducts.push(action.payload);   //This line appends the newly added product (from the addProduct thunk) to the userProducts array in the Redux state.
         }
        
     }
@@ -147,21 +155,31 @@ export function addProduct(data){
 
 
 
+// export function deleteProduct(productId) {
+//     return async function deleteProductThunk(dispatch) {
+//         dispatch(setStatus(STATUSES.LOADING));
+//         try {
+//             const response = await APIAuthenticated.delete(`/product/${productId}`);
+//             dispatch(deleteProductById({ productId }));
+//             dispatch(setStatus(STATUSES.SUCCESS));
+//         } catch (error) {
+//             dispatch(setStatus(STATUSES.ERROR));
+//             throw error; 
+//         }
+//     };
+// }
 
-export function deleteProduct(productId){
-    return async function deleteProductThunk(dispatch){
-        dispatch(setStatus(STATUSES.LOADING));
+
+export function deleteProduct(productId) {
+    return async function deleteProductThunk(dispatch) {
+        dispatch(setUserProductsStatus(STATUSES.LOADING));
         try {
-            const response = await APIAuthenticated.delete(`/products/${productId}`) 
-            // console.log(response.data.data);
-           dispatch(deleteProductById({productId}))
-            dispatch(setStatus(STATUSES.SUCCESS));
-           
+            const response = await APIAuthenticated.delete(`/product/${productId}`);
+            dispatch(deleteProductById({ productId }));
+            dispatch(setUserProductsStatus(STATUSES.SUCCESS));
         } catch (error) {
-            console.log(error);
-            dispatch(setStatus(STATUSES.ERROR));
-            
+            dispatch(setUserProductsStatus(STATUSES.ERROR));
+            throw error; 
         }
-
-    }
+    };
 }

@@ -2,8 +2,13 @@
 import React, { useEffect } from "react";
 import s1 from "../assets/picTwo.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserProducts } from "@/store/productSlice";
+import { deleteProduct, fetchUserProducts } from "@/store/productSlice";
 import { useNavigate } from "react-router-dom";
+import { GoTrash } from "react-icons/go";
+import { FiEdit } from "react-icons/fi";
+import { STATUSES } from "@/globals/misc/statuses";
+import toast from "react-hot-toast";
+import { fetchCartItems } from "@/store/cartSlice";
 
 const Product = () => {
     const apiUrl = import.meta.env.VITE_APP_API_URL;
@@ -24,6 +29,17 @@ const Product = () => {
     }, [dispatch]);
 
 
+    const handleDelete = async(productId) => {
+        if (window.confirm("Are you sure you want to delete this product?")) {
+             try {
+                await dispatch(deleteProduct(productId));
+                await dispatch(fetchCartItems())           // after delete product also update cart items & length
+                toast.success("Product deleted successfully!");
+            } catch (error) {
+                toast.error(error.message || "Failed to delete product");
+            }
+        }
+    };
 
     return (
         <>
@@ -63,7 +79,7 @@ const Product = () => {
                                             <h5 className="text-lg font-semibold">{product.name}</h5>
                                         </div>
 
-                                        <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                                        <p className="mt-2 text-sm text-gray-600 ">
                                             {product.description}
                                         </p>
 
@@ -72,10 +88,26 @@ const Product = () => {
                                                 <span className="font-semibold">Price:</span> $
                                                 {product.price}
                                             </p>
-                                            <p className="text-sm">
-                                                <span className="font-semibold">InStock:</span>{" "}
-                                                {product.inStock}
-                                            </p>
+                                           <div className="flex items-center justify-between">
+                                                <p className="text-sm">
+                                                    <span className="font-semibold">InStock:</span>{" "}
+                                                    {product.inStock}
+                                                </p>
+                                                 <div className="flex gap-4 items-center">
+                                                    <GoTrash
+                                                        className="text-red-600 hover:text-red-800 cursor-pointer"
+                                                        size={20}
+                                                        onClick={() => handleDelete(product._id)}
+                                                        title="Delete Product"
+                                                    />
+                                                    <FiEdit
+                                                        className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                                                        size={20}
+                                                        // onClick={() => handleEdit(product._id)}
+                                                        title="Edit Product"
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
