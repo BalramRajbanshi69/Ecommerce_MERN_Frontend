@@ -14,6 +14,7 @@ const productSlice = createSlice({
         userProducts:[],  // for specific user product
         userProductsStatus: STATUSES.SUCCESS ,// for specific user status 
         selectedProductDetails:{},   // for single product details
+        updateProductStatus: STATUSES.SUCCESS, // New status for update operation
         
     },
     reducers:{                      // reducers are pure and synchronous , so no api calls
@@ -50,13 +51,34 @@ const productSlice = createSlice({
          addProducts(state,action){
             state.data.push(action.payload)
             state.userProducts.push(action.payload);   //This line appends the newly added product (from the addProduct thunk) to the userProducts array in the Redux state.
-        }
+        },
+          // New reducer to handle the status of the update operation
+        setUpdateProductStatus(state, action) {
+            state.updateProductStatus = action.payload;
+        },
+            // New reducer to update a specific product in the state arrays
+        updateProductInState(state, action) {
+            const updatedProduct = action.payload;
+            // Update in `data` array
+            state.data = state.data.map(product =>
+                product._id === updatedProduct._id ? updatedProduct : product
+            );
+            // Update in `userProducts` array
+            state.userProducts = state.userProducts.map(product =>
+                product._id === updatedProduct._id ? updatedProduct : product
+            );
+            // If the updated product is the currently selected one, update it too
+            if (state.selectedProductDetails && state.selectedProductDetails._id === updatedProduct._id) {
+                state.selectedProductDetails = updatedProduct;
+            }
+        },
        
     }
 })
 
 
-export const {setProduct,setStatus,setUserProduct,setUserProductsStatus,setSearchTerm,setSelectedProductDetails,deleteProductById,addProducts} = productSlice.actions
+export const {setProduct,setStatus,setUserProduct,setUserProductsStatus,setSearchTerm,setSelectedProductDetails,deleteProductById,addProducts,setUpdateProductStatus,
+    updateProductInState } = productSlice.actions
 export default productSlice.reducer
 
 
@@ -182,4 +204,27 @@ export function deleteProduct(productId) {
             throw error; 
         }
     };
+}
+
+
+
+
+export function updateProduct({ id, productData }) {
+  return async function updateProductThunk(dispatch) {
+    dispatch(setUpdateProductStatus(STATUSES.LOADING));
+    try {
+      const response = await APIAuthenticated.put(`/product/${id}`, productData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Product updated successfully:', response.data.data);
+      dispatch(updateProductInState(response.data.data));
+      dispatch(setUpdateProductStatus(STATUSES.SUCCESS));
+    } catch (error) {
+      console.error('Error updating product:', error);
+      dispatch(setUpdateProductStatus(STATUSES.ERROR));
+      throw error;
+    }
+  };
 }
