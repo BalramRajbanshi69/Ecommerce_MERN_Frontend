@@ -66,16 +66,16 @@ const EditProductModal = ({ isOpen, onClose, productToEdit }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+    <div className="fixed inset-0 bg-transparent backdrop-blur-[2px]  flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full relative">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl"
+          className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl cursor-pointer"
         >
           &times;
         </button>
         <h2 className="text-2xl font-bold mb-4 text-black">Edit Product</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-2">
           <div>
             <label
               htmlFor="name"
@@ -169,7 +169,7 @@ const EditProductModal = ({ isOpen, onClose, productToEdit }) => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
+            className="w-full cursor-pointer bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
             disabled={updateProductStatus === STATUSES.LOADING}
           >
             {updateProductStatus === STATUSES.LOADING
