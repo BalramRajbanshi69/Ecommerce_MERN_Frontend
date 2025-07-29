@@ -24,7 +24,7 @@ const MainHome = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <Button asChild size="lg" className="px-8 rounded-full">
-                <Link to="/profile">
+                <Link to="/cartlist">
                   Shop Now <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
@@ -34,7 +34,7 @@ const MainHome = () => {
                 size="lg"
                 className="px-8 rounded-full"
               >
-                <Link to="/services">Our Services</Link>
+                <Link to="/addproduct">Add Product</Link>
               </Button>
             </div>
           </div>
