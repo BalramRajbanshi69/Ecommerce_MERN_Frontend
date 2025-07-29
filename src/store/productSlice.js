@@ -161,7 +161,7 @@ export function addProduct(data){
                     }
                 }
             ) 
-            // console.log(response.data.data);
+            console.log("Added Product Response:", response.data.data);
            dispatch(addProducts(response.data.data))
             dispatch(setStatus(STATUSES.SUCCESS));
            

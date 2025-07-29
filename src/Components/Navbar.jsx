@@ -89,7 +89,7 @@ const Navbar = () => {
           {/* Navigation Links */}
           <div className="flex-1 hidden px-4 md:block">
             <ul className="flex items-center justify-center gap-8 font-bold text-[19px]">
-              {["Home", "Product", "Services", "Contact"].map((item, index) => (
+              {["Home", "UserProduct", "Services", "Contact"].map((item, index) => (
                 <Link
                   key={index}
                   className="nav-link"

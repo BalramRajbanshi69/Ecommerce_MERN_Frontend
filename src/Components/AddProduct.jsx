@@ -116,6 +116,9 @@ const AddProduct = () => {
     }
   };
 
+
+  
+
   const handleBlur = (e) => {
     setTouched({ ...touched, [e.target.name]: true });
   };
@@ -310,3 +313,10 @@ const AddProduct = () => {
 };
 
 export default AddProduct;
+
+
+
+
+
+
+
