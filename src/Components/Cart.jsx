@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const apiUrl = import.meta.env.VITE_APP_API_URL;
+  // const apiUrl = import.meta.env.VITE_APP_API_URL;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items: products } = useSelector((state) => state.cart);
@@ -49,7 +49,7 @@ const Cart = () => {
                     src={
                       product?.product?.productImage &&
                       product.product.productImage.length > 0
-                        ? `${apiUrl}${product.product.productImage[0]}`
+                        ? product.product.productImage[0]
                         : s1
                     }
                     alt={product?.product?.name || "Product Image"}

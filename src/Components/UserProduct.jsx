@@ -12,7 +12,7 @@ import { fetchCartItems } from "@/store/cartSlice";
 import EditProductModal from "./EditProductModal";
 
 const UserProduct = () => {
-    const apiUrl = import.meta.env.VITE_APP_API_URL;
+    // const apiUrl = import.meta.env.VITE_APP_API_URL;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -83,7 +83,7 @@ const UserProduct = () => {
                                                src={
                                                  product.productImage &&
                                                  product.productImage.length > 0
-                                                     ? `${apiUrl}${product.productImage[0]}`
+                                                    ? product.productImage[0]
                                                      : s1
                                              }
                                                 alt={product.name || "Product Image"}
