@@ -152,9 +152,7 @@ const EditProductModal = ({ isOpen, onClose, productToEdit }) => {
               <div className="mt-2 mb-2">
                 <p className="text-xs text-gray-500">Current Image:</p>
                 <img
-                  src={`{
-                    productToEdit.productImage[0]
-                  }?t=${new Date().getTime()}`}
+                  src={`${productToEdit.productImage[0]}?t=${new Date().getTime()}`}
                   alt="Current Product"
                   className="w-20 h-20 object-cover rounded"
                 />
