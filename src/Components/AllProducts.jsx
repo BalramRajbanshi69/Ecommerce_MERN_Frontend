@@ -9,6 +9,8 @@ const AllProducts = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: products, searchTerm } = useSelector((state) => state.product);
+  console.log("products",products);
+  
 
   const filteredSearchTerm = products.filter(
     (product) =>
