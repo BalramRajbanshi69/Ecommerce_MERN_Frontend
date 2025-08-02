@@ -6,7 +6,7 @@ import { Button } from '@/Components/ui/button';
 import toast from 'react-hot-toast';
 
 const Contact = () => {
-  const apiUrl = import.meta.env.VITE_REACT_API_URL
+  const apiUrl = import.meta.env.VITE_APP_API_URL
   const [formData, setFormData] = useState({
     fullname: '',
     email: '',
@@ -81,33 +81,40 @@ const Contact = () => {
     }
   
     try {
-      const response = await fetch(
-        `${apiUrl}/api/contact/contactsubmit`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": localStorage.getItem("token"),
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+     const response = await fetch(`${apiUrl}/api/contact/contactsubmit`, {
+        method: "POST",
+        headers: {
+        "Content-Type":"application/json",            
+        "Accept":"application/json",
+        "token":`${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(formData),
+      });
   
       const data = await response.json();
+
       
-      if (data) {
+      if (response.ok) {
         toast.success("Message sent successfully!");
         setFormData({
           fullname: "",
           email: "",
-          phone: "",
           subject: "",
           message: "",
+          phone:""
         });
-        setErrors({});
-      }
-       else {
-        toast.error( "Failed to send message");
+        setErrors({}); 
+      } else {
+        if (data.errors) {
+          const backendErrors = {};
+          data.errors.forEach((err) => {
+            backendErrors[err.param] = err.msg;
+          });
+          setErrors(backendErrors);
+          toast.error("Please fix the errors in the form");
+        } else {
+          toast.error(data.message || "Failed to send message");
+        }
       }
       
        } catch (error) {
@@ -116,7 +123,6 @@ const Contact = () => {
     }
   };
 
-  
   
 
   const handleChange = (e) => {
