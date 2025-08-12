@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Contact = () => {
   const apiUrl = import.meta.env.VITE_APP_API_URL
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     fullname: '',
     email: '',
